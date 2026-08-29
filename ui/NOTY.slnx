@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="NOTY/NOTY.vcxproj" Id="08e57cfa-1e71-4218-8312-0b1467fa939a">
+    <Deploy />
+  </Project>
+</Solution>

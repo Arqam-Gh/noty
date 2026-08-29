@@ -1,0 +1,38 @@
+# Build output
+ARM64/
+x64/
+x86/
+Debug/
+Release/
+
+# Compiled installer
+installer/Output/
+*.exe
+
+# XAML compiler
+**/Generated Files/
+
+# Packages.config
+packages/
+
+# VS files
+*.vcxproj.user
+*.suo
+.vs/
+
+# Resource editor cache
+*.APS
+
+# Misc
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.tlog
+*.log
+*.pri
+*.winmd
+*.xbf
+*.recipe
+*.idb
