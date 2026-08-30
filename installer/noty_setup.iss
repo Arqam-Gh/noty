@@ -1,7 +1,3 @@
-; Requires Inno Download Plugin (idp.iss) - download from:
-; https://github.com/PeterDaveHello/inno-download-plugin  (Code -> Download ZIP)
-; Extract idp.iss AND its "unicode" and "ansi" subfolders (they contain idp.dll) into the
-; same folder as this .iss - idp.iss loads the DLL from one of those subfolders automatically.
 #include "idp.iss"
 
 [Setup]
@@ -9,7 +5,7 @@ AppPublisher=Muhammad Arqam Ghayour
 WizardImageFile=NOTY_left.bmp
 AppName=NOTY
 AppVersion=1.0
-SetupIconFile=NOTY.ico
+SetupIconFile=Noty.ico
 DefaultDirName={autopf}\NOTY
 DefaultGroupName=NOTY
 DisableWelcomePage=yes
@@ -23,29 +19,17 @@ PrivilegesRequired=admin
 Source: "Noty.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "NOTY.bmp"; DestDir: "{tmp}"; Flags: dontcopy
 
-; --- WinUI3 tray UI and its dependencies ---
-; TODO: replace "UI.exe" below with your actual compiled filename once you rename it.
-; UIFiles\* pulls the exe plus every DLL/support file sitting next to it in your
-; Release build output folder. Point this Source path at that folder before compiling.
 Source: "UIFiles\*"; DestDir: "{app}\UI"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Tasks]
-; Unchecked by default is safer for re-installs (user may already have these); user can tick it on.
 Name: "installruntimes"; Description: "Download and install Windows App SDK Runtime and Visual C++ Redistributable (required for the NOTY tray app; ~80 MB download, internet connection needed)"; GroupDescription: "Prerequisites:"; Flags: checkedonce
 
 [Icons]
 Name: "{group}\NOTY"; Filename: "{app}\UI\noty_ui.exe"
-; commonstartup (All Users Startup), not userstartup: Setup runs elevated (PrivilegesRequired=admin),
-; so userstartup would write into the elevated/admin profile's Startup folder instead of the actual
-; end user's - the shortcut would exist but never run for the person using the PC. commonstartup is
-; the correct per-machine location when the installer itself is already elevated.
 Name: "{commonstartup}\NOTY UI"; Filename: "{app}\UI\noty_ui.exe"
 
 [Run]
-; Launches the app automatically during installation with administrative privileges (no checkbox option)
 Filename: "{app}\Noty.exe"; Flags: nowait skipifsilent
-; Launches the WinUI3 tray UI right after install too, so the user sees the tray icon immediately
-; instead of waiting for the next logon for the commonstartup shortcut above to kick in.
 Filename: "{app}\UI\noty_ui.exe"; Flags: nowait skipifsilent postinstall
 
 [Code]
@@ -57,21 +41,11 @@ var
   EditSavePath: TNewEdit;
   ErrorCode, ResultCode: Integer;
 
-// Reads the REAL local Documents folder from the registry, bypassing OneDrive redirection.
-// Windows stores the current "Personal" (Documents) folder path in this registry key. If OneDrive
-// has redirected Documents, this key's value points into the OneDrive path instead of the local one.
-// So instead of trusting this key blindly, we build the local path ourselves from {userdocs}'s
-// parent structure is unreliable too (same redirection problem), so the only fully reliable method
-// is: take the local user profile folder (which is never redirected by OneDrive) and manually
-// append \Documents to it. {userdocs} is NOT used here on purpose since it can return the OneDrive path.
 function GetLocalDocumentsPath: String;
 begin
   Result := ExpandConstant('{%USERPROFILE}') + '\Documents';
 end;
 
-// Returns True if Dir is a drive root, like "D:\" or "D:" or "C:\".
-// A drive root has nothing after the colon-backslash, so its length is 2 or 3
-// and its structure is exactly "<Letter>:" or "<Letter>:\".
 function IsDriveRoot(Dir: String): Boolean;
 begin
   Result := False;
@@ -81,8 +55,6 @@ begin
     Result := True;
 end;
 
-// Given whatever path the user picked, returns the correct final save path:
-// if it's a drive root, appends NOTY_SAVES; if it's already a folder, returns it unchanged.
 function ResolveSavePath(PickedPath: String): String;
 begin
   if IsDriveRoot(PickedPath) then
@@ -91,7 +63,6 @@ begin
     Result := PickedPath;
 end;
 
-// Runs when user clicks the Browse button on the Save Options page
 procedure BrowseButtonClick(Sender: TObject);
 var
   Dir: String;
@@ -101,13 +72,11 @@ begin
     EditSavePath.Text := ResolveSavePath(Dir);
 end;
 
-// Runs when user clicks the GitHub button on the finish page
 procedure GithubButtonClick(Sender: TObject);
 begin
   ShellExec('open', 'https://github.com/Arqam-Gh', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
-// Page 1: custom welcome / branding page
 procedure CreateWelcomePage;
 var
   WelcomePage: TWizardPage;
@@ -116,7 +85,6 @@ var
 begin
   WelcomePage := CreateCustomPage(wpWelcome, '', '');
 
-  // top color band, 20% of page height
   YellowPanel := TPanel.Create(WelcomePage);
   YellowPanel.Parent := WelcomePage.Surface;
   YellowPanel.Left := 0;
@@ -150,7 +118,6 @@ begin
   MadeByLabel.Top := DescLabel.Top + DescLabel.Height + 24;
 end;
 
-// Page 3: Default vs Manual choice (page 2 is Inno's own Select Destination Location page)
 procedure CreateChoicePage;
 begin
   ChoicePage := CreateCustomPage(wpSelectDir, 'Setup Type', 'Choose how you want to configure NOTY');
@@ -171,7 +138,6 @@ begin
   RadioManual.Width := ChoicePage.SurfaceWidth - 32;
 end;
 
-// Page 4: Tweaks (bullets, endline, double endline) - skipped if Default was picked
 procedure CreateTweaksPage;
 var
   PreviewBullets, PreviewEndline, PreviewDouble: TNewMemo;
@@ -238,7 +204,6 @@ begin
   PreviewDouble.Lines.Text := 'SampleA' + #13#10 + #13#10 + 'SampleB';
 end;
 
-// Page 5: naming option + save location - skipped if Default was picked
 procedure CreateSaveOptionsPage;
 var
   NameLabel, LocationLabel: TNewStaticText;
@@ -290,7 +255,6 @@ begin
   BrowseButton.OnClick := @BrowseButtonClick;
 end;
 
-// Adds GitHub button + hotkey note onto Inno's own built-in finish page
 procedure CreateFinishPageExtras;
 var
   ConnectLabel, HotkeyLabel: TNewStaticText;
@@ -333,10 +297,6 @@ begin
   idpDownloadAfter(wpReady);
 end;
 
-// Runs every time the wizard reaches the Ready-to-install page. Re-adding the file list
-// here (after clearing it) is the documented idp pattern for conditional downloads -
-// the user can navigate back and forth, so the list must be rebuilt each time, not just once.
-// URL confirmed matching the project's installed Microsoft.WindowsAppSDK 2.2.0.
 procedure CurPageChanged(CurPageID: Integer);
 begin
   if CurPageID = wpReady then
@@ -350,7 +310,6 @@ begin
   end;
 end;
 
-// Skips Tweaks + Save Options pages completely if "Use Default Settings" was picked
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   Result := False;
@@ -361,7 +320,6 @@ begin
   end;
 end;
 
-// Writes config.ini and registers the auto-start task after files are copied
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   IniPath, FinalSavePath: String;
@@ -388,9 +346,6 @@ begin
       if CheckEndline.Checked then FinalEndline := '1' else FinalEndline := '0';
       if CheckDoubleEndline.Checked then FinalDouble := '1' else FinalDouble := '0';
       if RadioByTimestamp.Checked then FinalRenameOption := '0' else FinalRenameOption := '1';
-      // ResolveSavePath here is the final safety net: covers the case where the user typed
-      // a drive root directly into the edit box instead of using Browse (Browse already
-      // resolves it, but manual typing bypasses that, so it must be checked again here).
       FinalSavePath := ResolveSavePath(EditSavePath.Text);
     end;
 
@@ -402,7 +357,6 @@ begin
     SetIniString('LocationToSaveFile', 'path', FinalSavePath, IniPath);
     SetIniString('Rename_Type', 'option', FinalRenameOption, IniPath);
 
-    // Create the Task Scheduler XML content with explicit WorkingDirectory and Highest Available privileges.
     XmlContent := 
       '<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">' + #13#10 +
       '  <RegistrationInfo>' + #13#10 +
@@ -437,12 +391,9 @@ begin
     XmlPath := ExpandConstant('{tmp}\task.xml');
     if SaveStringToFile(XmlPath, XmlContent, False) then
     begin
-      // Import the XML definition to create the task with all correct properties
       Exec('schtasks.exe', '/create /tn "NOTY" /xml "' + XmlPath + '" /f', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
     end;
 
-    // Silently install the downloaded prerequisites, only if the user opted in AND
-    // the files actually made it to {tmp} (download could have failed/been skipped).
     if IsTaskSelected('installruntimes') then
     begin
       if FileExists(ExpandConstant('{tmp}\WindowsAppRuntimeInstall-x64.exe')) then
@@ -453,7 +404,6 @@ begin
   end;
 end;
 
-// Removes the scheduled task on uninstall
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usPostUninstall then
