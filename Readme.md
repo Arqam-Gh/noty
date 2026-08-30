@@ -5,6 +5,8 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 
+**Remainder: NOT VIBE CODED**
+
 Whatever text is selected by the user in any window, pressing the hotkey **Ctrl+Alt+S** makes NOTY create a .txt file at the user-specified save location, copy the text, paste it into the file, save it, and close it — saving you the repetitive steps of note-taking. Until the user creates a new file with **Ctrl+Alt+N**, all text will keep saving into the same .txt file with proper naming and formatting.
 
 ## What others don't have
