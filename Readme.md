@@ -14,10 +14,10 @@ Whatever text is selected by the user in any window, pressing the hotkey **Ctrl+
 Unlike other vibe-coded or web-stack-heavy apps, NOTY uses under 1MB of RAM. It is:
 
 - Written in C++ with efficient memory management.
-- Built on the Win32 API to make the program faster.
+- Built on the WinAPI32 to make the program faster.
 - Given a GUI made in WinUI3 (XAML/C++) to keep it as efficient as possible.
 
-NOTY automates the repetitive note-saving steps for you. It runs in the background, takes minimal resources (~1MB of RAM), and does the same job more efficiently than most apps on the market.
+NOTY automates the repetitive note-saving steps for you. It runs in the background, takes minimal resources (<1MB of RAM), and does the same job more efficiently than most apps on the market.
 
 ## What the GUI offers
 
