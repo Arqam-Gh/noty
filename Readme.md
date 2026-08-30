@@ -5,39 +5,50 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 
-NOTY is a small Windows app I made that saves selected text to a file with one hotkey. Select any text anywhere, press the hotkey, and it gets copied and saved to a .txt file. No need to open notepad, copy, paste, save. One shortcut does it.
+Whatever text is selected by the user in any window, pressing the hotkey **Ctrl+Alt+S** makes NOTY create a .txt file at the user-specified save location, copy the text, paste it into the file, save it, and close it — saving you the repetitive steps of note-taking. Until the user creates a new file with **Ctrl+Alt+N**, all text will keep saving into the same .txt file with proper naming and formatting.
 
-Takes less than 1MB. Written in C++ using the raw Windows API.
+## What others don't have
 
-![NOTY demo](demo.gif)
+Unlike other vibe-coded or web-stack-heavy apps, NOTY uses under 1MB of RAM. It is:
 
-## How it works
+- Written in C++ with efficient memory management.
+- Built on the Win32 API to make the program faster.
+- Given a GUI made in WinUI3 (XAML/C++) to keep it as efficient as possible.
 
-You select text in any window (browser, PDF, chat, anything), then press:
+NOTY automates the repetitive note-saving steps for you. It runs in the background, takes minimal resources (~1MB of RAM), and does the same job more efficiently than most apps on the market.
 
-- **Ctrl+Alt+S** — saves the selected text to your file
-- **Ctrl+Alt+N** — starts a new file
-- **Ctrl+Alt+X** — exits the program
+## What the GUI offers
 
-When you save, a small toast notification pops up in the corner near the taskbar to tell you it worked.
+With an easy-to-use interface, the GUI lets you:
+
+- See all the .txt files saved so far, view them, edit them, and save changes.
+- Change the formatting used when saving text. *(Under development)*
+
+## Manual
+
+| Action | Hotkey |
+|---|---|
+| Save selected text | **Ctrl+Alt+S** |
+| Create a new file | **Ctrl+Alt+N** |
+| Exit the program | **Ctrl+Alt+X** |
+
+## Notification system
+
+Whenever you save a file, create a new one, or start/exit NOTY, a notification appears to confirm the action. The notification never steals focus and is small enough to notice without pulling you away from your work.
 
 ## Features
 
-- Global hotkeys, works from any window, you don't need NOTY to be focused
-- Saves as plain .txt files
-- Two ways to name your files:
-  - By time (each save gets a timestamped file)
-  - By the first text you copy (renames the file based on what you first save)
-- Tweaks you can turn on:
+- Text can be selected in any window.
+- Text is saved as plain .txt files — you can later hand these to an AI to turn into properly formatted PDF notes.
+- Two naming methods for your .txt files:
+  - By the current time/date
+  - By the initial words of the text you copy
+- Formatting options available:
   - New line after each save
   - Bullet points before each entry
-  - Double new line (extra blank line between entries)
-- Toast notifications for save, new file, errors, and program start/stop
-- A small tray UI (built separately in WinUI3) to change settings without editing config files by hand
-
-## Why I made this
-
-I wanted a fast way to dump text I come across into a file without breaking my flow. Opening notepad every time and doing copy-paste-save got annoying, so I built this instead.
+  - Double new line between entries
+- Notifications for save, new file, errors, and program start/stop.
+- GUI for faster editing of notes.
 
 ## How it flows
 
@@ -45,13 +56,13 @@ I wanted a fast way to dump text I come across into a file without breaking my f
 Select text  -->  Press Ctrl+Alt+S  -->  NOTY reads clipboard
                                               |
                                               v
-                                   Applies your naming/tweaks
+                                   Applies your naming/formatting
                                               |
                                               v
-                                    Writes to .txt file  -->  Toast confirms save
+                          Makes/writes to .txt file  -->  Toast confirms save  -->  Saves and closes the file
 ```
 
-## Tech
+## Details
 
 - Core app: C++, Win32 API (clipboard, global hotkeys, custom toast window with WM_PAINT)
 - Settings stored in a config.ini file in AppData
@@ -60,8 +71,12 @@ Select text  -->  Press Ctrl+Alt+S  -->  NOTY reads clipboard
 
 ## Installing
 
-Download the installer from the Releases page and run it. It sets things up for you, including an option to launch NOTY automatically when you log in to Windows.
+Download the installer from the Releases page and run it. It sets everything up for you.
 
 ## Notes
 
-This is a personal project, built and debugged by me from scratch, including the clipboard handling, toast notification system, and the installer.
+This is a personal project, built and debugged by me from scratch — including the clipboard handling, the toast notification system, and the installer. If it helps you a little, it will pay off my hard work.
+
+**FEEDBACK = Buying me a COFFEE**
+
+**Email:** arqamgh4@gmail.com
