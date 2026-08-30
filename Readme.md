@@ -7,15 +7,18 @@
 
 **Remainder: NOT VIBE CODED**
 
+NOTY is a note-taking app that automates the repetitive steps of taking notes, replacing them with a single key combination. It uses hundreds of times fewer resources than other note taking apps.
+
+## Working
 Whatever text is selected by the user in any window, pressing the hotkey **Ctrl+Alt+S** makes NOTY create a .txt file at the user-specified save location, copy the text, paste it into the file, save it, and close it — saving you the repetitive steps of note-taking. Until the user creates a new file with **Ctrl+Alt+N**, all text will keep saving into the same .txt file with proper naming and formatting.
 
-## What others don't have
+## What other note taking apps don't have
 
 Unlike other vibe-coded or web-stack-heavy apps, NOTY uses under 1MB of RAM. It is:
 
 - Written in C++ with efficient memory management.
 - Built on the WinAPI32 to make the program faster.
-- Given a GUI made in WinUI3 (XAML/C++) to keep it as efficient as possible.
+- A GUI made in WinUI3 (XAML/C++) to keep it as efficient as possible.
 
 NOTY automates the repetitive note-saving steps for you. It runs in the background, takes minimal resources (<1MB of RAM), and does the same job more efficiently than most apps on the market.
 
@@ -51,18 +54,6 @@ Whenever you save a file, create a new one, or start/exit NOTY, a notification a
   - Double new line between entries
 - Notifications for save, new file, errors, and program start/stop.
 - GUI for faster editing of notes.
-
-## How it flows
-
-```
-Select text  -->  Press Ctrl+Alt+S  -->  NOTY reads clipboard
-                                              |
-                                              v
-                                   Applies your naming/formatting
-                                              |
-                                              v
-                          Makes/writes to .txt file  -->  Toast confirms save  -->  Saves and closes the file
-```
 
 ## Details
 
